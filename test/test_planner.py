@@ -1,11 +1,11 @@
 import pytest
 from oscopilot.utils import setup_config
-from oscopilot import FridayPlanner, ToolManager
-from oscopilot.prompts.friday_pt import prompt
+from oscopilot import AxelPlanner, ToolManager
+from oscopilot.prompts.Axel_pt import prompt
 
 class TestPlanner:
     """
-    A test class for verifying the functionality of the FridayPlanner class.
+    A test class for verifying the functionality of the AxelPlanner class.
     
     This class focuses on testing the task decomposition capabilities of the planner, ensuring that tasks
     can be broken down into subtasks effectively. It is crucial for validating that the planner properly
@@ -15,7 +15,7 @@ class TestPlanner:
         """
         Setup method executed before each test method in this class.
         
-        This method prepares the FridayPlanner instance by configuring it with necessary settings and a predefined
+        This method prepares the AxelPlanner instance by configuring it with necessary settings and a predefined
         planning prompt, ensuring that the planner is ready to handle task decomposition.
 
         Args:
@@ -25,11 +25,11 @@ class TestPlanner:
         """        
         args = setup_config()
         self.prompt = prompt["planning_prompt"]
-        self.planner = FridayPlanner(self.prompt)
+        self.planner = AxelPlanner(self.prompt)
 
     def test_decompose_task(self):
         """
-        Test to verify that the task decomposition process in the FridayPlanner does not result in an empty subtask list.
+        Test to verify that the task decomposition process in the AxelPlanner does not result in an empty subtask list.
 
         This test checks the functionality of the `decompose_task` method by providing a specific task description
         and ensuring that the planner is capable of breaking it down into one or more subtasks. An empty list of

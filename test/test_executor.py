@@ -1,11 +1,11 @@
 import pytest
 from oscopilot.utils import setup_config
-from oscopilot import FridayExecutor, ToolManager
-from oscopilot.prompts.friday_pt import prompt
+from oscopilot import AxelExecutor, ToolManager
+from oscopilot.prompts.Axel_pt import prompt
 
 class TestExecutor:
     """
-    A test class for verifying the functionality of the FridayExecutor class.
+    A test class for verifying the functionality of the AxelExecutor class.
     
     This class tests the code generation capabilities of the executor, particularly how it handles the creation
     of tool invocations based on specified task requirements. The tests are designed to ensure the output from
@@ -16,7 +16,7 @@ class TestExecutor:
         """
         Setup method executed before each test method in this class.
         
-        This method initializes the FridayExecutor with a configuration and a predefined prompt for execution,
+        This method initializes the AxelExecutor with a configuration and a predefined prompt for execution,
         setting the stage for subsequent tests. This setup is crucial for ensuring that the executor is configured
         properly with the necessary context and tool management capabilities before performing any tests.
 
@@ -26,11 +26,11 @@ class TestExecutor:
         """        
         args = setup_config()
         self.prompt = prompt["execute_prompt"]
-        self.executor = FridayExecutor(self.prompt, ToolManager)
+        self.executor = AxelExecutor(self.prompt, ToolManager)
 
     def test_generator_tool(self):
         """
-        Test to ensure that the code generation by the FridayExecutor returns valid and non-empty outputs.
+        Test to ensure that the code generation by the AxelExecutor returns valid and non-empty outputs.
 
         This test assesses the `generate_tool` method of the executor by providing it with a specific task name,
         task description, and additional context (though empty in this case) to see if the resulting code and

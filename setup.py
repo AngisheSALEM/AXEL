@@ -21,7 +21,7 @@ setup(
 
     entry_points={
         "console_scripts": [
-            "friday=quick_start:main",
+            "Axel=quick_start:main",
         ],
     },
 

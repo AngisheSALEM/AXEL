@@ -1,5 +1,5 @@
 {
-  "name": "friday",
+  "name": "Axel",
   "author": "Ichinoe <shiinahiiragi@outlook.com>",
   "description": "AI agent powered by LLM.",
   "version": "2.0.0",
@@ -64,8 +64,8 @@
     "wait-on": "^7.2.0"
   },
   "build": {
-    "appId": "com.electron.friday",
-    "productName": "FRIDAY",
+    "appId": "com.electron.Axel",
+    "productName": "Axel",
     "files": [
       "build/**/*",
       "node_modules/**/*"

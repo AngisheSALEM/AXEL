@@ -1,4 +1,4 @@
-# FRIDAY Front
+# Axel Front
 
 ## Usage
 
