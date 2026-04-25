@@ -1,33 +1,50 @@
+import asyncio
 from livekit.agents import JobContext, WorkerOptions, cli, llm
 from livekit.agents.voice_assistant import VoiceAssistant
-from livekit.plugins import openai, silero
+from livekit.plugins import silero, openai
 from loguru import logger
 
-async def entrypoint(ctx: JobContext):
-    logger.info(f"Connexion établie avec la room: {ctx.room.name}")
+# Note: Pour une souveraineté totale, STT et TTS devraient être remplacés par
+# des plugins utilisant des modèles locaux (ex: Deepgram avec local engine,
+# ou Whisper local). Pour ce squelette, nous utilisons les abstractions
+# de LiveKit qui permettent de switcher facilement.
 
-    # Le contexte initial d'AXEL
+async def entrypoint(ctx: JobContext):
+    """
+    Point d'entrée pour le pipeline vocal AXEL avec LiveKit.
+    Configuration orientée LOCAL-FIRST.
+    """
+    logger.info(f"🎙️ AXEL Voice: Connexion à la room {ctx.room.name}")
+
+    # Contexte initial spécifique à la voix
     initial_ctx = llm.ChatContext().append(
         role="system",
         text=(
-            "Tu es AXEL. Tu es un assistant système vocal. "
-            "Tes réponses doivent être courtes, car elles sont lues à haute voix."
+            "Tu es AXEL, l'interface vocale d'un assistant système souverain. "
+            "Réponds de manière concise. Ton intelligence est locale."
         ),
     )
 
-    # Configuration de l'assistant (Lien entre Oreilles, Cerveau et Voix)
+    # Configuration de l'assistant Vocal
+    # VAD (Détection d'activité vocale) est déjà local avec Silero.
     assistant = VoiceAssistant(
-        vad=silero.VAD.load(),  # Détection de voix
-        stt=openai.STT(),       # Transcription (Whisper)
-        llm=openai.LLM(),       # Moteur de réponse
-        tts=openai.TTS(),       # Synthèse vocale
+        vad=silero.VAD.load(),
+
+        # En production hors-ligne, on utiliserait des versions locales de STT/TTS
+        # Ex: livekit-plugins-whisper (local) et livekit-plugins-piper (local TTS)
+        stt=openai.STT(), # Placeholder Switchable
+        tts=openai.TTS(), # Placeholder Switchable
+
+        # Le LLM peut être relié à notre agent PydanticAI (local via Ollama)
+        llm=openai.LLM(), # Placeholder Switchable
+
         chat_ctx=initial_ctx,
     )
 
     await ctx.connect()
     assistant.start(ctx.room)
     
-    await assistant.say("AXEL est en ligne. Je t'écoute.", allow_interruptions=True)
+    await assistant.say("AXEL Voice activé. Je vous écoute.", allow_interruptions=True)
 
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))

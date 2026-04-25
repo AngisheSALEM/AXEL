@@ -1,16 +1,23 @@
-# === LE CERVEAU ===
-pydantic-ai
+# AXEL System Requirements
 
-# === LA VOIX ===
+# Core Agent Framework
+pydantic-ai[ollama]
+
+# LLM & API Clients
+ollama
+httpx
+
+# System Nervous System (MCP)
+mcp
+fastmcp
+
+# Voice Interface
 livekit-agents
 livekit-api
+livekit-plugins-openai
+livekit-plugins-silero
 
-# === LE SYSTEME NERVEUX ===
-mcp
-
-# === LES MAINS (Contrôle Docker pour OpenHands) ===
-docker
-
-# === OUTILS STANDARDS ===
-python-dotenv
+# Utilities
 loguru
+python-dotenv
+pydantic
