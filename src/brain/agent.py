@@ -1,31 +1,20 @@
 from pydantic_ai import Agent, RunContext
-from pydantic_ai.models.ollama import OllamaModel # <--- Import local
+from pydantic_ai.models.ollama import OllamaModel
 from pydantic import BaseModel, Field
 from .memory import save_to_vault
 
-# Utilisation du moteur Ollama configuré sur ton Codespace
-local_model = OllamaModel(model_name='llama3.1') # Ou 'phi3' selon ton choix
+local_model = OllamaModel(model_name='llama3.1')
 
 class MemorySchema(BaseModel):
-    topic: str = Field(description="Le sujet principal")
-    category: str = Field(description="La catégorie (code, concept, erreur)")
-    content: str = Field(description="Le contenu détaillé")
+    topic: str = Field(description="Sujet")
+    category: str = Field(description="Catégorie (code, concept, erreur)")
+    content: str = Field(description="Contenu")
 
-# AXEL est maintenant propulsé par ton propre serveur
 axel = Agent(
     model=local_model, 
-    system_prompt=(
-        "Tu es AXEL, un assistant IA souverain fonctionnant en local. "
-        "Tu es précis, technique et tu as une mémoire persistante. "
-        "Utilise l'outil 'memorize' pour sauvegarder les infos importantes."
-    ),
+    system_prompt="Tu es AXEL, assistant système local. Utilise 'memorize' pour le Vault.",
 )
 
 @axel.tool
 def memorize(ctx: RunContext, memory_data: MemorySchema) -> str:
-    """Outil pour mémoriser des infos dans le Vault."""
-    return save_to_vault(
-        topic=memory_data.topic,
-        category=memory_data.category,
-        content=memory_data.content
-    )
+    return save_to_vault(memory_data.topic, memory_data.category, memory_data.content)
