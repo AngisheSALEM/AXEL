@@ -34,32 +34,37 @@ async def check_ollama():
     return False
 
 async def main():
-    logger.info("🚀 Démarrage du système AXEL OS-Copilot...")
+    logger.info("🚀 Démarrage du système AXEL - Phase 2 (Opérateur Automatisé)")
 
     # 1. Vérification de l'environnement
     ollama_ready = await check_ollama()
 
-    # 2. Simulation d'une tâche (Brain + Hands + Memory)
-    if ollama_ready:
-        print("\n" + "="*50)
-        print("🤖 TEST DE L'AGENT AXEL")
-        print("="*50)
+    if not ollama_ready:
+        logger.error("❌ Impossible de lancer AXEL sans Ollama.")
+        return
 
-        prompt = (
-            "Analyse le fichier 'src/brain/memory.py', "
-            "résume ce qu'il fait et mémorise ce résumé dans la catégorie 'architecture'."
-        )
+    # 2. Simulation d'une tâche complexe (Multi-Agent + Système + Mémoire)
+    print("\n" + "═"*50)
+    print("🤖 AXEL : INTERFACE MANAGER ACTIVÉE")
+    print("═"*50)
 
-        logger.info(f"Utilisateur: {prompt}")
+    prompt = (
+        "AXEL, analyse mon fichier 'src/main.py', trouve une optimisation "
+        "pour la gestion des erreurs, écris le correctif, et mémorise cette action."
+    )
 
-        try:
-            # L'agent va utiliser read_project_file puis save_to_vault
-            result = await axel.run(prompt)
-            print(f"\n🤖 AXEL : {result.data}")
-        except Exception as e:
-            logger.error(f"Erreur lors de l'exécution de l'agent : {e}")
-    else:
-        logger.error("❌ Impossible de lancer l'agent sans Ollama.")
+    logger.info(f"👤 Utilisateur : {prompt}")
+
+    try:
+        # L'agent MANAGER va piloter la mission
+        result = await axel.run(prompt)
+
+        print("\n" + "═"*50)
+        print(f"✅ MISSION ACCOMPLIE : {result.data}")
+        print("═"*50)
+
+    except Exception as e:
+        logger.error(f"💥 Erreur critique : {e}")
 
 if __name__ == '__main__':
     try:
