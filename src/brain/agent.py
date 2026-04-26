@@ -85,9 +85,10 @@ def memorize(ctx: RunContext, memory_data: MemorySchema) -> str:
 async def delegate_to_coder(ctx: RunContext[Any], prompt: str) -> str:
     """Délègue une tâche technique (lecture, écriture, commande) au CODER."""
     logger.info(f"👨‍✈️ Manager -> Coder : {prompt}")
-    # On passe l'historique des messages pour garder le contexte si nécessaire
-    result = await coder_agent.run(prompt, message_history=ctx.messages)
-    return result.data
+    # On passe une copie de l'historique pour éviter de polluer l'historique du Manager
+    # et éviter l'erreur "unprocessed tool calls" lors de la clôture de la délégation.
+    result = await coder_agent.run(prompt, message_history=list(ctx.messages))
+    return str(result.data)
 
 @manager_agent.tool
 def list_files_manager(ctx: RunContext[Any], directory: str = ".") -> list[str]:
