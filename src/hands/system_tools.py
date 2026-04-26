@@ -1,4 +1,5 @@
 import os
+import subprocess
 from mcp.server.fastmcp import FastMCP
 from loguru import logger
 from pathlib import Path
@@ -42,5 +43,53 @@ def read_project_file(filepath: str) -> str:
     except Exception as e:
         logger.error(f"Erreur read_project_file: {e}")
         return f"Erreur: Impossible de lire le fichier - {str(e)}"
+
+@mcp.tool()
+def write_project_file(filepath: str, content: str) -> str:
+    """
+    Crée ou écrase un fichier dans le projet.
+    """
+    try:
+        path = Path(filepath)
+
+        # Sécurité de base
+        if ".git" in path.parts or path.is_absolute() and not str(path).startswith(os.getcwd()):
+             return "Erreur: Tentative d'écriture hors du projet ou dans un dossier protégé."
+
+        # Création des dossiers parents si nécessaire
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        logger.info(f"📝 Fichier écrit : {filepath}")
+        return f"Succès: Fichier {filepath} mis à jour."
+    except Exception as e:
+        logger.error(f"Erreur write_project_file: {e}")
+        return f"Erreur lors de l'écriture : {str(e)}"
+
+@mcp.tool()
+def execute_command(command: str) -> str:
+    """
+    Exécute une commande shell et retourne le résultat.
+    """
+    try:
+        logger.info(f"🐚 Exécution commande : {command}")
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+
+        output = result.stdout
+        if result.stderr:
+            output += f"\n--- ERREURS ---\n{result.stderr}"
+
+        return output if output else "Commande exécutée (pas de sortie)."
+    except Exception as e:
+        logger.error(f"Erreur execute_command: {e}")
+        return f"Erreur d'exécution : {str(e)}"
 
 # Note: Ces outils seront injectés dans l'agent PydanticAI
